@@ -1,5 +1,44 @@
 <script setup>
+import { reactive } from 'vue'
+import Alerta from './Alerta.vue'
 
+const alerta = reactive({
+  tipo: '',
+  mensaje: ''
+})
+
+defineEmits(['update:nombre', 'update:propietario', 'update:email', 'update:alta', 'update:sistomas'])
+
+const props = defineProps({
+  nombre: {
+    type: String,
+    required:true
+  },
+  propietario: {
+    type: String,
+    required:true
+  },
+  email: {
+    type: String,
+    required:true
+  },
+  alta: {
+    type: String,
+    required:true
+  },
+  sintomas: {
+    type: String,
+    required:true
+  }
+})
+
+const validar = () => {
+  if(Object.values(props).includes('')){
+    alerta.mensaje = 'Todos los campos son obligatorios'
+    alerta.tipo = 'error'
+    return
+  }
+}
 </script>
 
 <template>
@@ -11,8 +50,14 @@
       <span class="text-indigo-600 font-bold">Administralos</span>
     </p>
 
+    <Alerta 
+      v-if="alerta.mensaje"
+      :alerta="alerta"
+    />
+
     <form
       class="bg-white shadow-md rounded-lg py-10 px-5 mb-10"
+      @submit.prevent="validar"
     >
       <div class="mb-5">
         <label 
@@ -27,6 +72,8 @@
           type="text"
           placeholder="Nombre de la mascota"
           class="border-2 w-full p-2 mt-2 placeholder-gray-400 rounded-md"
+          :value="nombre"
+          @input="$emit('update:nombre', $event.target.value)"
         />
       </div>
 
@@ -43,6 +90,8 @@
           type="text"
           placeholder="Nombre del propietario"
           class="border-2 w-full p-2 mt-2 placeholder-gray-400 rounded-md"
+          :value="propietario"
+          @input="$emit('update:propietario', $event.target.value)"
         />
       </div>
 
@@ -59,6 +108,8 @@
           type="email"
           placeholder="Email del propietario"
           class="border-2 w-full p-2 mt-2 placeholder-gray-400 rounded-md"
+          :value="email"
+          @input="$emit('update:email', $event.target.value)"
         />
       </div>
 
@@ -74,6 +125,8 @@
           id="alta"
           type="date"
           class="border-2 w-full p-2 mt-2 placeholder-gray-400 rounded-md"
+          :value="alta"
+          @input="$emit('update:alta', $event.target.value)"
         />
       </div>
 
@@ -89,6 +142,8 @@
           id="sintomas"
           placeholder="Describe los sintomas"
           class="border-2 w-full p-2 mt-2 placeholder-gray-400 rounded-md h-40"
+          :value="sintomas"
+          @input="$emit('update:sistomas', $event.target.value)"
         />
       </div>
 
